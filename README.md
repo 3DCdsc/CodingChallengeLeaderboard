@@ -16,52 +16,41 @@ A real-time leaderboard application built with Express.js backend and vanilla Ja
 
 ## Installation
 
-### 1. Install Dependencies
+### 1. Install Docker Desktop and Postman
+
+
+### 2. Install Dependencies
 ```bash
 npm install
 ```
 
-### 2. Set up Redis
-Option A: Local Redis
+### 3. Set up Redis
+
+In your terminal type in the following
 ```bash
-# Make sure Redis is running on port 6379
-redis-server
+docker run -d --name redis-stack -p 6379:6379 redis/redis-stack:latest
 ```
 
-Option B: Docker
-```bash
-docker run -d --name redis -p 6379:6379 redis:latest
-```
 
-### 3. Environment Variables
-Create a `.env` file:
-```
-PORT=3000
-REDIS_HOST=127.0.0.1
-REDIS_PORT=6379
-```
+### 4. Open up Docker
+In the container section, you should see a container running in the background 
+
 
 ## Running the Project
 
 ### Start Backend
 ```bash
-npm start
-# or with nodemon for development
 npx nodemon app.js
 ```
 
 The backend will run on `http://localhost:3000`
 
 ### Open Frontend
-1. Open `frontend/index.html` in your browser
-2. Or serve it with a local server:
-```bash
-cd frontend
-npx http-server
-```
+ Open `frontend/index.html` in your browser
+
 
 ## API Endpoints
-
+You can try the following PUT and GET requests in postman
 ### Add/Update Player
 **PUT** `/leaderboard/update`
 ```json
