@@ -74,6 +74,15 @@ Response:
 }
 ```
 
+## Viewing Data
+
+### Redis Stack UI
+Access the Redis database visually:
+```
+http://localhost:8001
+```
+You can see all stored data, including the `leaderboard:yeetcode` key with player data.
+
 ## Project Structure
 ```
 leaderboard/
