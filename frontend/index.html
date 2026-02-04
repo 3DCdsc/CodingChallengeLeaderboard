@@ -9,14 +9,32 @@
 <body>
     <div class="container">
         <h1>LEADERBOARD</h1>
-    <table class="leaderboard-table">
-        <thead>
-            <tr>
-                <th>Rank</th> <th>Player</th> <th>Timing</th>
-            </tr>
-        </thead>
-        <tbody id="leaderboard"></tbody>
-    </table>
+        
+        <!-- Category Tabs -->
+        <div class="category-tabs" id="categoryTabs">
+            <!-- Tabs will be dynamically generated -->
+        </div>
+        
+        <!-- Current Category Display -->
+        <div class="current-category">
+            <span id="currentCategoryName">Select a category</span>
+        </div>
+        
+        <!-- Leaderboard Table -->
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th> 
+                    <th>Player</th> 
+                    <th>Timing</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard">
+                <tr>
+                    <td colspan="3" style="text-align: center; padding: 40px;">Select a category to view leaderboard</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <script src="script.js"></script>
 </body>
