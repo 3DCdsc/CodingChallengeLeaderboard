@@ -17,10 +17,32 @@ const redis = new Redis({
     //password: process.env.REDIS_PASSWORD
 })
 
-//set up a key to get the leaderboard
-const LEADERBOARD_KEY = "leaderboard:yeetcode"
-
 app.use(express.json())
+
+/**
+ * Helper function to generate leaderboard key
+ */
+function getLeaderboardKey(category) {
+    return `leaderboard:${category}`;
+}
+
+/**
+ * @route GET /leaderboard/categories
+ * @description Get all available leaderboard categories
+ */
+app.get("/leaderboard/categories", async (req, res) => {
+    try {
+        const keys = await redis.keys("leaderboard:*");
+        const categories = keys.map(key => key.replace("leaderboard:", ""));
+        res.json({
+            success: true,
+            data: categories
+        });
+    } catch (error) {
+        console.error("Categories Fetch Error:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
 
 /**
  * @route PUT /leaderboard/update
@@ -28,13 +50,15 @@ app.use(express.json())
  */
 app.put("/leaderboard/update", async (req, res) => {
     try {
-        const { player, timing } = req.body;
+        const { player, timing, category } = req.body;
 
-        if (!player || !timing) {
-            return res.status(400).json({ message: "Player and timing required"})
+        if (!player || !timing || !category) {
+            return res.status(400).json({ message: "Player, timing, and category required"})
         }
-        await redis.zadd(LEADERBOARD_KEY, timing, player);
-        res.json({message: "Leaderboard updated"});
+        
+        const leaderboardKey = getLeaderboardKey(category);
+        await redis.zadd(leaderboardKey, timing, player);
+        res.json({message: "Leaderboard updated", category});
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" })
@@ -42,12 +66,19 @@ app.put("/leaderboard/update", async (req, res) => {
 })
 
 /**
- * @route GET /leaderboard/rank
- * @description Fetches the rank of leaderboard
+ * @route GET /leaderboard/rank/:category
+ * @description Fetches the rank of leaderboard for a specific category
  */
-app.get("/leaderboard/rank", async (req, res) => {
+app.get("/leaderboard/rank/:category", async (req, res) => {
     try {
-        const rank = await redis.zrange(LEADERBOARD_KEY, 0, 9, "WITHSCORES")
+        const { category } = req.params;
+        
+        if (!category) {
+            return res.status(400).json({ message: "Category required" });
+        }
+        
+        const leaderboardKey = getLeaderboardKey(category);
+        const rank = await redis.zrange(leaderboardKey, 0, 9, "WITHSCORES")
 
         const leaderboard = []
 
@@ -59,6 +90,7 @@ app.get("/leaderboard/rank", async (req, res) => {
         }
         res.json({
             success : true,
+            category : category,
             data : leaderboard
         })
     } catch (error) {

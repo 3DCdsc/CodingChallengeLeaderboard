@@ -33,6 +33,62 @@ h1 {
     color: white;
 }
 
+/* Category Tabs */
+.category-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.category-tab {
+    background: #1a1a1a;
+    color: white;
+    border: 2px solid #333;
+    padding: 12px 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+}
+
+.category-tab:hover {
+    background: #2a2a2a;
+    border-color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.category-tab.active {
+    background: white;
+    color: #000;
+    border-color: white;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* Current Category Display */
+.current-category {
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 6px;
+}
+
+.current-category span {
+    font-size: 1.1em;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
 .leaderboard-table {
     width: 100%;
     border-collapse: collapse;
