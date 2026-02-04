@@ -73,7 +73,7 @@ async function loadLeaderboard(category) {
                 row.innerHTML = `
                     <td>${index + 1}</td>
                     <td>${entry.player}</td>
-                    <td>${entry.timing}</td>
+                    <td>${parseFloat(entry.timing).toFixed(3)}</td>
                 `;
                 tbody.appendChild(row);
             });
