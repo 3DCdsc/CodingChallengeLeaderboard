@@ -3,39 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YeetCode Leaderboard</title>
+    <title>Leaderboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Background decorations -->
+    <div class="halftone-overlay"></div>
+    <div class="corner-triangle top-left"></div>
+    <div class="corner-triangle bottom-right"></div>
+
+    <!-- Main container -->
     <div class="container">
-        <h1>LEADERBOARD</h1>
-        
-        <!-- Category Tabs -->
-        <div class="category-tabs" id="categoryTabs">
-            <!-- Tabs will be dynamically generated -->
-        </div>
-        
-        <!-- Current Category Display -->
-        <div class="current-category">
-            <span id="currentCategoryName">Select a category</span>
-        </div>
-        
-        <!-- Leaderboard Table -->
-        <table class="leaderboard-table">
-            <thead>
-                <tr>
-                    <th>Rank</th> 
-                    <th>Player</th> 
-                    <th>Timing</th>
-                </tr>
-            </thead>
-            <tbody id="leaderboard">
-                <tr>
-                    <td colspan="3" style="text-align: center; padding: 40px;">Select a category to view leaderboard</td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- Header Section -->
+        <header>       
+            <div class="title-row">
+                <h1>LEADERBOARD</h1>
+            </div>
+        </header>
+
+        <!-- Table Section -->
+        <section class="table-section">
+            <div class="panel-frame">
+                <div class="panel-halftone"></div>
+                <div class="red-banner">
+                    <h2 id="bannerTitle">SELECT A CATEGORY</h2>
+                </div>
+                
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th class="col-rank">RANK</th>
+                            <th class="col-name">PLAYER</th>
+                            <th class="col-time">TIME</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard">
+                        <tr>
+                            <td colspan="3" class="empty-msg">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer>
+            
+            <div class="speech-bubble">
+                <div class="bubble-tail-outer"></div>
+                <div class="bubble-tail-inner"></div>
+                <p>SUTD OpenHOUSe</p>
+            </div>
+            
+            <div class="issue-label">Built by 3DC</div>
+        </footer>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
