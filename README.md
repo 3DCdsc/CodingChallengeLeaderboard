@@ -1,4 +1,5 @@
-![Uploading Screenshot 2026-02-10 at 11.49.52 PM.png…]()
+
+<img width="842" height="635" alt="Screenshot 2026-02-10 at 11 49 52 PM" src="https://github.com/user-attachments/assets/589fd281-3dfb-46eb-a479-57f478387c82" />
 
 
 # Coding Challenge Leaderboard
