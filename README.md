@@ -1,3 +1,5 @@
+<img width="1352" height="878" alt="Screenshot 2026-02-10 at 11 49 52 PM" src="https://github.com/user-attachments/assets/23561f82-fe36-4cfc-94c4-34362d7a5b9b" />
+
 # Coding Challenge Leaderboard
 
 A real-time leaderboard application built with Express.js backend and vanilla JavaScript frontend, using Redis for data storage.
