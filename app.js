@@ -6,6 +6,7 @@ const Redis = require("ioredis");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const CATEGORY_UPDATES_KEY = "leaderboard_updates";
+const LATEST_SUBMISSION_PREFIX = "leaderboard_latest_submission:";
 
 //connect to frontend
 const cors = require("cors");
@@ -25,6 +26,10 @@ app.use(express.json())
  */
 function getLeaderboardKey(category) {
     return `leaderboard:${category}`;
+}
+
+function getLatestSubmissionKey(category) {
+    return `${LATEST_SUBMISSION_PREFIX}${category}`;
 }
 
 /**
@@ -67,8 +72,18 @@ app.put("/leaderboard/update", async (req, res) => {
         }
         
         const leaderboardKey = getLeaderboardKey(category);
-        await redis.zadd(leaderboardKey, timing, player);
+        const numericTiming = Number.parseFloat(timing);
+
+        await redis.zadd(leaderboardKey, numericTiming, player);
         await redis.zadd(CATEGORY_UPDATES_KEY, Date.now(), category);
+        await redis.set(
+            getLatestSubmissionKey(category),
+            JSON.stringify({
+                player,
+                timing: numericTiming,
+                updatedAt: Date.now()
+            })
+        );
         res.json({message: "Leaderboard updated", category});
     } catch (error) {
         console.error(error);
@@ -89,20 +104,33 @@ app.get("/leaderboard/rank/:category", async (req, res) => {
         }
         
         const leaderboardKey = getLeaderboardKey(category);
+        const latestSubmissionRaw = await redis.get(getLatestSubmissionKey(category));
+        const latestSubmission = latestSubmissionRaw ? JSON.parse(latestSubmissionRaw) : null;
         const rank = await redis.zrange(leaderboardKey, 0, 9, "WITHSCORES")
 
         const leaderboard = []
 
         for (let i = 0; i < rank.length; i += 2) {
+            const player = rank[i];
+            const timing = rank[i + 1];
+            const numericTiming = Number.parseFloat(timing);
+            const isLatest = Boolean(
+                latestSubmission &&
+                latestSubmission.player === player &&
+                Math.abs(Number.parseFloat(latestSubmission.timing) - numericTiming) < 0.0000001
+            );
+
             leaderboard.push({
-                player : rank[i],
-                timing : rank[i + 1]
+                player,
+                timing,
+                isLatest
             })
         }
         res.json({
             success : true,
             category : category,
-            data : leaderboard
+            data : leaderboard,
+            latestSubmission
         })
     } catch (error) {
         console.error(("Leaderboard Fetch Error:", error))

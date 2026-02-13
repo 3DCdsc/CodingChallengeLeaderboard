@@ -1,5 +1,6 @@
 const CATEGORY_REFRESH_MS = 3000;
 let categoryRefreshInterval = null;
+const categorySortOrder = {};
 
 async function fetchCategories() {
     const response = await fetch('http://localhost:3000/leaderboard/categories', {
@@ -25,10 +26,10 @@ async function fetchLeaderboard(category) {
             return [];
         }
 
-        return result.data.map((entry, index) => ({
-            rank: index + 1,
+        return result.data.map((entry) => ({
             name: entry.player || 'UNKNOWN',
-            time: Number.parseFloat(entry.timing) || 0
+            time: Number.parseFloat(entry.timing) || 0,
+            isLatest: entry.isLatest === true
         }));
     } catch (error) {
         console.error(`Error loading leaderboard for ${category}:`, error);
@@ -48,8 +49,40 @@ function createTableHeader() {
     return thead;
 }
 
+function getCategorySortOrder(category) {
+    if (!categorySortOrder[category]) {
+        categorySortOrder[category] = 'asc';
+    }
+
+    return categorySortOrder[category];
+}
+
+function toggleCategorySortOrder(category) {
+    const currentOrder = getCategorySortOrder(category);
+    categorySortOrder[category] = currentOrder === 'asc' ? 'desc' : 'asc';
+    refreshLeaderboards();
+}
+
+function sortEntries(category, entries) {
+    const sortOrder = getCategorySortOrder(category);
+    const sortedEntries = [...entries].sort((firstEntry, secondEntry) => {
+        return sortOrder === 'asc'
+            ? firstEntry.time - secondEntry.time
+            : secondEntry.time - firstEntry.time;
+    });
+
+    return sortedEntries.map((entry, index) => ({
+        ...entry,
+        rank: index + 1
+    }));
+}
+
 function createRow(entry) {
     const row = document.createElement('tr');
+
+    if (entry.isLatest) {
+        row.classList.add('latest-submission');
+    }
 
     const rankCell = document.createElement('td');
     rankCell.className = 'col-rank';
@@ -61,7 +94,7 @@ function createRow(entry) {
     const nameCell = document.createElement('td');
     nameCell.className = 'col-name';
     const name = document.createElement('span');
-    name.className = `player-name ${entry.rank <= 3 ? 'top-3' : ''}`;
+    name.className = `player-name ${entry.rank <= 3 ? 'top-3' : ''} ${entry.isLatest ? 'latest' : ''}`;
     name.textContent = entry.name;
     nameCell.appendChild(name);
 
@@ -88,9 +121,25 @@ function createLeaderboardCard(category, entries, hasError = false) {
 
     const banner = document.createElement('div');
     banner.className = 'red-banner';
+
+    const bannerContent = document.createElement('div');
+    bannerContent.className = 'banner-content';
+
     const title = document.createElement('h2');
     title.textContent = category.toUpperCase();
-    banner.appendChild(title);
+
+    const sortButton = document.createElement('button');
+    const sortOrder = getCategorySortOrder(category);
+    sortButton.type = 'button';
+    sortButton.className = 'sort-toggle-btn';
+    sortButton.textContent = sortOrder === 'asc' ? 'ASC ↑' : 'DESC ↓';
+    sortButton.addEventListener('click', () => {
+        toggleCategorySortOrder(category);
+    });
+
+    bannerContent.appendChild(title);
+    bannerContent.appendChild(sortButton);
+    banner.appendChild(bannerContent);
 
     const table = document.createElement('table');
     table.className = 'leaderboard-table';
@@ -103,7 +152,8 @@ function createLeaderboardCard(category, entries, hasError = false) {
     } else if (!entries || entries.length === 0) {
         tbody.innerHTML = '<tr><td colspan="3" class="empty-msg">No entries yet</td></tr>';
     } else {
-        entries.forEach(entry => {
+        const sortedEntries = sortEntries(category, entries);
+        sortedEntries.forEach(entry => {
             tbody.appendChild(createRow(entry));
         });
     }

@@ -196,6 +196,14 @@ h1 {
     padding: 0.5rem 1rem;
 }
 
+.banner-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
 h2 {
     font-family: var(--font-bangers);
     font-size: 1.125rem;
@@ -205,9 +213,35 @@ h2 {
     text-shadow: 3px 3px 0px var(--foreground);
 }
 
+.sort-toggle-btn {
+    border: 2px solid var(--foreground);
+    background: var(--comic-yellow);
+    color: var(--foreground);
+    font-family: var(--font-bangers);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.55rem;
+    box-shadow: 2px 2px 0px var(--foreground);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.sort-toggle-btn:hover {
+    opacity: 0.9;
+}
+
+.sort-toggle-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px var(--foreground);
+}
+
 @media (min-width: 768px) {
     h2 {
         font-size: 1.375rem;
+    }
+
+    .sort-toggle-btn {
+        font-size: 0.9rem;
     }
 }
 
@@ -275,6 +309,14 @@ h2 {
 .leaderboard-table tbody tr:hover {
     transform: scale(1.01);
     z-index: 10;
+}
+
+.leaderboard-table tbody tr.latest-submission {
+    background: var(--comic-yellow) !important;
+}
+
+.leaderboard-table tbody tr.latest-submission td {
+    font-weight: 700;
 }
 
 /* Row background colors (cycle through 4) */
@@ -402,6 +444,12 @@ h2 {
 
 .player-name.top-3 {
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.15);
+}
+
+.player-name.latest::after {
+    content: '  ★ LATEST';
+    font-size: 0.7em;
+    letter-spacing: 0.08em;
 }
 
 /* Speech bubble timing */
