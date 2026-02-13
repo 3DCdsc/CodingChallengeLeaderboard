@@ -5,6 +5,7 @@ const Redis = require("ioredis");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const CATEGORY_UPDATES_KEY = "leaderboard_updates";
 
 //connect to frontend
 const cors = require("cors");
@@ -34,9 +35,18 @@ app.get("/leaderboard/categories", async (req, res) => {
     try {
         const keys = await redis.keys("leaderboard:*");
         const categories = keys.map(key => key.replace("leaderboard:", ""));
+        const recentlyUpdated = await redis.zrevrange(CATEGORY_UPDATES_KEY, 0, -1);
+
+        const orderedUpdatedCategories = recentlyUpdated.filter(category => categories.includes(category));
+        const remainingCategories = categories
+            .filter(category => !orderedUpdatedCategories.includes(category))
+            .sort();
+
+        const orderedCategories = [...orderedUpdatedCategories, ...remainingCategories];
+
         res.json({
             success: true,
-            data: categories
+            data: orderedCategories
         });
     } catch (error) {
         console.error("Categories Fetch Error:", error);
@@ -58,6 +68,7 @@ app.put("/leaderboard/update", async (req, res) => {
         
         const leaderboardKey = getLeaderboardKey(category);
         await redis.zadd(leaderboardKey, timing, player);
+        await redis.zadd(CATEGORY_UPDATES_KEY, Date.now(), category);
         res.json({message: "Leaderboard updated", category});
     } catch (error) {
         console.error(error);

@@ -21,28 +21,22 @@
             </div>
         </header>
 
-        <!-- Table Section -->
+        <!-- Leaderboards Section -->
         <section class="table-section">
-            <div class="panel-frame">
-                <div class="panel-halftone"></div>
-                <div class="red-banner">
-                    <h2 id="bannerTitle">SELECT A CATEGORY</h2>
+            <div id="leaderboardsGrid" class="leaderboards-grid">
+                <div class="panel-frame">
+                    <div class="panel-halftone"></div>
+                    <div class="red-banner">
+                        <h2>LOADING...</h2>
+                    </div>
+                    <table class="leaderboard-table">
+                        <tbody>
+                            <tr>
+                                <td colspan="3" class="empty-msg">Loading leaderboards...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                
-                <table class="leaderboard-table">
-                    <thead>
-                        <tr>
-                            <th class="col-rank">RANK</th>
-                            <th class="col-name">PLAYER</th>
-                            <th class="col-time">TIME</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboard">
-                        <tr>
-                            <td colspan="3" class="empty-msg">Loading...</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </section>
 

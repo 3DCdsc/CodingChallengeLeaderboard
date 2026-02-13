@@ -137,7 +137,7 @@ h1 {
 /* ========== TABLE SECTION ========== */
 .table-section {
     padding: 0.5rem 0.5rem;
-    max-width: 32rem;
+    max-width: 96rem;
     margin: 0 auto;
     position: relative;
     z-index: 2;
@@ -146,8 +146,25 @@ h1 {
 @media (min-width: 768px) {
     .table-section {
         padding: 0.75rem 0.75rem;
-        max-width: 34rem;
+        max-width: 96rem;
     }
+}
+
+.leaderboards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 0.75rem;
+    align-items: start;
+}
+
+@media (min-width: 768px) {
+    .leaderboards-grid {
+        gap: 1rem;
+    }
+}
+
+.full-width-message {
+    grid-column: 1 / -1;
 }
 
 .panel-frame {
